@@ -1,6 +1,6 @@
 let restaurants,
-  neighborhoods,
-  cuisines
+    neighborhoods,
+    cuisines
 var map
 var markers = []
 
@@ -138,10 +138,38 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
 createRestaurantHTML = (restaurant) => {
   const li = document.createElement('li');
 
+  const img = DBHelper.imageUrlForRestaurant(restaurant);
+
+  img_parts = img.split('.');
+
+  const picture = document.createElement('picture');
+  let source;
+
+  // medium
+  source = document.createElement('source');
+  source.media = '(min-width: 321px)';
+  source.srcset = img_parts[0] + '-640-md.' + img_parts[1];
+  picture.append(source);
+
+  // 1x
+  source = document.createElement('source');
+  source.media = '(min-width: 641px)';
+  source.srcset = img_parts[0] + '-1024-1x.' + img_parts[1];
+  picture.append(source);
+
+  // 2x
+  source = document.createElement('source');
+  source.media = '(min-width: 1025px)';
+  source.srcset = img_parts[0] + '-1600-2x.' + img_parts[1];
+  picture.append(source);
+
   const image = document.createElement('img');
   image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant);
-  li.append(image);
+  image.src = img_parts[0] + '-320-sm.' + img_parts[1];
+  image.alt = restaurant.name;
+  picture.append(image);
+
+  li.append(picture);
 
   const name = document.createElement('h1');
   name.innerHTML = restaurant.name;
@@ -157,6 +185,7 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
+  more.role = 'button';
   more.href = DBHelper.urlForRestaurant(restaurant);
   li.append(more)
 
