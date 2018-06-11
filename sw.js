@@ -1,5 +1,5 @@
 var cachePrefix = 'mws-restaurant-stage-1';
-var staticCacheName = cachePrefix + '-v15';
+var staticCacheName = cachePrefix + '-v24';
 var contentImgsCache = cachePrefix + '-content-imgs';
 var allCaches = [
   staticCacheName,
@@ -8,7 +8,7 @@ var allCaches = [
     //console.log('staticCacheName=' + (staticCacheName));
 
 self.addEventListener('install', function(event) {
-    //console.log('install()');
+  //console.log('install()');
   event.waitUntil(
     caches.open(staticCacheName).then(function(cache) {
     //console.log('cache=' + (cache));
@@ -17,38 +17,36 @@ self.addEventListener('install', function(event) {
         '/index.html',
         '/restaurant.html',
         '/js/sw-reg.js',
-        '/js/sw.js',
+        '/sw.js',
         '/js/main.js',
         '/js/dbhelper.js',
         '/js/restaurant_info.js',
         '/css/styles.css',
+        'https://raw.githubusercontent.com/udacity/mws-restaurant-stage-1/master/data/restaurants.json',
         'https://fonts.googleapis.com/css?family=Roboto',
-        'https://raw.githubusercontent.com/udacity/mws-restaurant-stage-1/master/data/restaurants.json'
+        'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700',
+        'https://fonts.gstatic.com/s/roboto/v18/KFOlCnqEu92Fr1MmEU9fBBc4.woff2',
+        'https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxK.woff2'
       ]);
     })
   );
 });
 
 self.addEventListener('activate', function(event) {
-    //console.log('activate()');
+  //console.log('activate()');
   event.waitUntil(
-    caches.keys().then(function(cacheNames) {
-      return Promise.all(
-        cacheNames.filter(function(cacheName) {
-          return cacheName.startsWith('mws-restaurant-stage-1') &&
-                 !allCaches.includes(cacheName);
-        }).map(function(cacheName) {
-          return caches.delete(cacheName);
-        })
-      );
-    })
+    cleanCache()
   );
 });
 
 self.addEventListener('fetch', function(event) {
-  console.log('fetch()');
+  //console.log('fetch()');
+
   var requestUrl = new URL(event.request.url);
-  console.log('requestUrl=' + (requestUrl));
+  //console.log('requestUrl=' + (requestUrl));
+
+  //console.log('requestUrl.origin=' + (requestUrl.origin));
+  //console.log('location.origin=' + (location.origin));
 
   if (requestUrl.origin === location.origin) {
     if (requestUrl.pathname === '' || requestUrl.pathname === '/') {
@@ -65,7 +63,6 @@ self.addEventListener('fetch', function(event) {
 });
 
 function servePhoto(request) {
-
   //console.log('servePhoto()');
   //console.log('request.url=' + (request.url));
 
@@ -102,4 +99,18 @@ function serveRequest(request) {
       });
     });
   });
+}
+
+function cleanCache(){
+    console.log('cleanCache()');
+    return caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(cacheName) {
+          return cacheName.startsWith(cachePrefix) &&
+                 !allCaches.includes(cacheName);
+        }).map(function(cacheName) {
+          return caches.delete(cacheName);
+        })
+      );
+    });
 }

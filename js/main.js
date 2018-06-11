@@ -185,8 +185,14 @@ createRestaurantHTML = (restaurant) => {
 
   const more = document.createElement('a');
   more.innerHTML = 'View Details';
-  more.role = 'button';
   more.href = DBHelper.urlForRestaurant(restaurant);
+
+  // https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/ARIA_Techniques/Using_the_alert_role
+  more.setAttribute("role", "button");
+  more.setAttribute("tabindex", "0");
+  more.setAttribute("aria-pressed", "false");
+  more.setAttribute("aria-label", restaurant.name);
+
   li.append(more);
 
   return li
