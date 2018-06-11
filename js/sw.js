@@ -4,14 +4,15 @@ var allCaches = [
   staticCacheName,
   contentImgsCache
 ];
-    console.log('staticCacheName=' + (staticCacheName));
+    //console.log('staticCacheName=' + (staticCacheName));
 
 self.addEventListener('install', function(event) {
-    console.log('install()');
+    //console.log('install()');
   event.waitUntil(
     caches.open(staticCacheName).then(function(cache) {
-    console.log('cache=' + (cache));
+    //console.log('cache=' + (cache));
       return cache.addAll([
+        '/index.html',
         '/js/main.js',
         '/js/dbhelper.js',
         '/js/restaurant_info.js',
@@ -23,7 +24,7 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('activate', function(event) {
-    console.log('activate()');
+    //console.log('activate()');
   event.waitUntil(
     caches.keys().then(function(cacheNames) {
       return Promise.all(
@@ -39,9 +40,9 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
-    console.log('fetch()');
+    //console.log('fetch()');
   var requestUrl = new URL(event.request.url);
-console.log('requestUrl=' + (requestUrl));
+//console.log('requestUrl=' + (requestUrl));
 
   if (requestUrl.origin === location.origin) {
     if (requestUrl.pathname === '/') {
@@ -62,7 +63,7 @@ console.log('requestUrl=' + (requestUrl));
 });
 
 self.addEventListener('message', function(event) {
-    console.log('message()');
+    //console.log('message()');
   if (event.data.action === 'skipWaiting') {
     self.skipWaiting();
   }
@@ -70,11 +71,11 @@ self.addEventListener('message', function(event) {
 
 function servePhoto(request) {
 
-        console.log('servePhoto()');
-    console.log('request.url=' + (request.url));
+        //console.log('servePhoto()');
+    //console.log('request.url=' + (request.url));
 
   var storageUrl = request.url.replace(/^(\d+-?)+\d+$\.jpg$/, '');
-  console.log('storageUrl=' + (storageUrl));
+  //console.log('storageUrl=' + (storageUrl));
 
   return caches.open(contentImgsCache).then(function(cache) {
     return cache.match(storageUrl).then(function(response) {
