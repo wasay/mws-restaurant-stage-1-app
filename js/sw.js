@@ -64,13 +64,6 @@ self.addEventListener('fetch', function(event) {
   event.respondWith(serveRequest(event.request));
 });
 
-self.addEventListener('message', function(event) {
-    //console.log('message()');
-  if (event.data.action === 'skipWaiting') {
-    self.skipWaiting();
-  }
-});
-
 function servePhoto(request) {
 
   //console.log('servePhoto()');
